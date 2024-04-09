@@ -9,11 +9,10 @@ class WeatherRepository {
     final response = await http
         .get(Uri.parse(url), headers: {'Content-Type': 'application/json'});
     if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body);
       print(response.body);
       ('response: ${response.body}');
-      return Weather.fromJson(jsonDecode(
-        response.body,
-      ));
+      return Weather.fromJson(jsonData['current']);
     } else {
       throw Exception('Failed to load weather');
     }

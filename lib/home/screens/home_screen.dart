@@ -14,6 +14,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late final Future<Weather> weatherData;
 
+  void refreshWeather() {
+    setState(() {
+      WeatherRepository().getWeather();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -44,7 +50,9 @@ class _HomeScreenState extends State<HomeScreen> {
               FutureBuilder<Weather>(
                 future: weatherData,
                 builder: (context, snapshot) {
-                  if (snapshot.hasData) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasData) {
                     return Column(
                       children: [
                         Text(
@@ -55,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          'Feels like: ${snapshot.data!.apparentTemperature}°C',
+                          "Apparent: ${snapshot.data!.apparentTemperature}°C",
                           style: const TextStyle(
                               fontSize: 15,
                               color: Color.fromARGB(255, 42, 42, 42),
@@ -68,6 +76,22 @@ class _HomeScreenState extends State<HomeScreen> {
                               color: Color.fromARGB(255, 42, 42, 42),
                               fontWeight: FontWeight.bold),
                         ),
+                        if (snapshot.data!.isDay == 1)
+                          const Text(
+                            'DayTime: Day',
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: Color.fromARGB(255, 42, 42, 42),
+                                fontWeight: FontWeight.bold),
+                          )
+                        else
+                          const Text(
+                            'DayTime: Night',
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: Color.fromARGB(255, 42, 42, 42),
+                                fontWeight: FontWeight.bold),
+                          ),
                         Text(
                           'Latitude: ${snapshot.data!.latitude}',
                           style: const TextStyle(
@@ -93,14 +117,12 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  setState(() {
-                    WeatherRepository().getWeather();
-                  });
+                  refreshWeather();
                 },
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
                         const Color.fromARGB(255, 1, 151, 171))),
-                child: const Text("Refresh",
+                child: const Text("Refresh it Wilma!",
                     style: TextStyle(
                       fontSize: 15,
                       color: Color.fromARGB(255, 255, 255, 255),

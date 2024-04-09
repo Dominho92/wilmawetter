@@ -4,21 +4,24 @@ class Weather {
   final double? precipitation;
   final double? latitude;
   final double? longitude;
+  final int? isDay;
 
   Weather(
       {required this.apparentTemperature,
       required this.temperature,
       required this.precipitation,
       required this.latitude,
-      required this.longitude});
+      required this.longitude,
+      required this.isDay});
 
   factory Weather.fromJson(Map<String, dynamic> json) {
     return Weather(
       apparentTemperature: json['apparent_temperature'],
-      temperature: json['temperature_2m'],
+      temperature: json["temperature_2m"],
       precipitation: json['precipitation'],
       latitude: json['latitude'],
       longitude: json['longitude'],
+      isDay: json['is_day'],
     );
   }
 }
