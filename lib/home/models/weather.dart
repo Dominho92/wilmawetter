@@ -3,7 +3,7 @@ class Weather {
   final double feelsLike;
   final double temperature;
   final double niederschlag;
-  final int dayTime;
+  final bool dayTime;
   final double latitude;
   final double longitude;
 
@@ -18,11 +18,11 @@ class Weather {
 
   factory Weather.fromJson(Map<String, dynamic> json) {
     return Weather(
-      city: json['cityName'],
-      feelsLike: json['feelsLike'],
-      temperature: json['temperature'],
-      niederschlag: json['niederschlag'],
-      dayTime: json['dayTime'],
+      city: json['city'],
+      feelsLike: json['apparent_temperature'],
+      temperature: json['temperature_2m'],
+      niederschlag: json['precipitation'],
+      dayTime: json['is_day'],
       latitude: json['latitude'],
       longitude: json['longitude'],
     );
@@ -30,11 +30,11 @@ class Weather {
 
   Map<String, dynamic> toJson() {
     return {
-      'cityName': city,
-      'feelsLike': feelsLike,
-      'temperature': temperature,
-      'niederschlag': niederschlag,
-      'dayTime': dayTime,
+      'city': city,
+      'apparent_temperature': feelsLike,
+      'temperature_2m': temperature,
+      'precipitation': niederschlag,
+      'is_day': dayTime,
       'latitude': latitude,
       'longitude': longitude,
     };
