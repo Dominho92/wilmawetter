@@ -73,7 +73,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   backgroundColor: MaterialStateProperty.all<Color>(
                       const Color.fromARGB(255, 1, 151, 171)),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  weatherRepository.fetchWeather();
+                },
                 child: const Text(
                   "Refresh",
                   style: TextStyle(
