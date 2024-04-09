@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:wilmawetter/home/models/weather.dart';
 import 'package:wilmawetter/home/repositories/weather_repository.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({
+    super.key,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  WeatherRepository weatherData = WeatherRepository();
+  late final Future<Weather> weatherData;
+
+  @override
+  void initState() {
+    super.initState();
+    weatherData = WeatherRepository().getWeather();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,47 +41,70 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Color.fromARGB(255, 1, 151, 171),
                     fontWeight: FontWeight.bold),
               ),
-              FutureBuilder(
-                future: weatherData.fetchWeather(),
+              FutureBuilder<Weather>(
+                future: weatherData,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return Column(
                       children: [
                         Text(
-                          "Temperature: ${snapshot.data?.temperature}°C",
+                          'Temperature: ${snapshot.data!.temperature}°C',
                           style: const TextStyle(
-                              fontSize: 18,
-                              color: Color.fromARGB(255, 1, 151, 171),
+                              fontSize: 15,
+                              color: Color.fromARGB(255, 42, 42, 42),
                               fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          "Feels Like: ${snapshot.data?.feelsLike}°C",
+                          'Feels like: ${snapshot.data!.apparentTemperature}°C',
                           style: const TextStyle(
-                              fontSize: 18,
-                              color: Color.fromARGB(255, 1, 151, 171),
+                              fontSize: 15,
+                              color: Color.fromARGB(255, 42, 42, 42),
                               fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          "Precipitation: ${snapshot.data?.niederschlag}mm",
+                          'Precipitation: ${snapshot.data!.precipitation} mm',
                           style: const TextStyle(
-                              fontSize: 18,
-                              color: Color.fromARGB(255, 1, 151, 171),
+                              fontSize: 15,
+                              color: Color.fromARGB(255, 42, 42, 42),
                               fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          "Day Time: ${snapshot.data?.dayTime}",
+                          'Latitude: ${snapshot.data!.latitude}',
                           style: const TextStyle(
-                              fontSize: 18,
-                              color: Color.fromARGB(255, 1, 151, 171),
+                              fontSize: 15,
+                              color: Color.fromARGB(255, 42, 42, 42),
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'Longitude: ${snapshot.data!.longitude}',
+                          style: const TextStyle(
+                              fontSize: 15,
+                              color: Color.fromARGB(255, 42, 42, 42),
                               fontWeight: FontWeight.bold),
                         ),
                       ],
                     );
                   } else if (snapshot.hasError) {
-                    return Text("${snapshot.error}");
+                    return Text('${snapshot.error}');
                   }
                   return const CircularProgressIndicator();
                 },
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    WeatherRepository().getWeather();
+                  });
+                },
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        const Color.fromARGB(255, 1, 151, 171))),
+                child: const Text("Refresh",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Color.fromARGB(255, 255, 255, 255),
+                    )),
               ),
             ],
           ),
