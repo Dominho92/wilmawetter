@@ -1,10 +1,10 @@
 class Weather {
-  final double? apparentTemperature;
-  final double? temperature;
-  final double? precipitation;
-  final double? latitude;
-  final double? longitude;
-  final int? isDay;
+  final double apparentTemperature;
+  final double temperature;
+  final double precipitation;
+  final double latitude;
+  final double longitude;
+  final int isDay;
 
   Weather(
       {required this.apparentTemperature,
@@ -16,12 +16,12 @@ class Weather {
 
   factory Weather.fromJson(Map<String, dynamic> json) {
     return Weather(
-      apparentTemperature: json['apparent_temperature'],
-      temperature: json["temperature_2m"],
-      precipitation: json['precipitation'],
+      apparentTemperature: json['current']["apparent_temperature"],
+      temperature: json['current']["temperature_2m"],
+      precipitation: json['current']['precipitation'],
       latitude: json['latitude'],
       longitude: json['longitude'],
-      isDay: json['is_day'],
+      isDay: json['current']['is_day'],
     );
   }
 }

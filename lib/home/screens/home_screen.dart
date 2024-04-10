@@ -12,11 +12,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late final Future<Weather> weatherData;
+  late Future<Weather> weatherData;
 
   void refreshWeather() {
     setState(() {
-      WeatherRepository().getWeather();
+      weatherData = WeatherRepository().getWeather();
     });
   }
 
