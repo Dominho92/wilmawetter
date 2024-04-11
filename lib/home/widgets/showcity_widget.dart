@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:wilmawetter/home/widgets/citysearchdialog_widget.dart';
+import 'package:wilmawetter/home/models/city.dart';
 
 class ShowCityWidget extends StatefulWidget {
-  const ShowCityWidget({super.key});
+  const ShowCityWidget({super.key, required City city});
 
   @override
   State<ShowCityWidget> createState() => _ShowCityWidgetState();

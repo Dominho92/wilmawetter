@@ -8,7 +8,7 @@ class CityRepository {
   Future<City> getCity(
     String city,
   ) async {
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 1));
     final url = 'https://api.api-ninjas.com/v1/geocoding?city=$city';
     final response =
         await http.get(Uri.parse(url), headers: {'X-Api-Key': _apiKey});

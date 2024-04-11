@@ -3,7 +3,6 @@ import 'package:wilmawetter/home/models/city.dart';
 import 'package:wilmawetter/home/models/weather.dart';
 import 'package:wilmawetter/home/repositories/city_repository.dart';
 import 'package:wilmawetter/home/repositories/weather_repository.dart';
-import 'package:wilmawetter/home/widgets/citysearchdialog_widget.dart';
 import 'package:wilmawetter/home/widgets/showcity_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -19,9 +18,24 @@ class _HomeScreenState extends State<HomeScreen> {
   late Future<Weather> weatherData;
   late Future<City> cityData;
 
+  TextEditingController cityController = TextEditingController();
+
+  List<String> selectedCities = [];
+
+  final WeatherRepository _weatherRepository = WeatherRepository();
+  final CityRepository _cityRepository = CityRepository();
+
+  City? city;
+
+  @override
+  void dispose() {
+    cityController.dispose();
+    super.dispose();
+  }
+
   void refreshWeather() {
     setState(() {
-      weatherData = WeatherRepository().getWeather();
+      weatherData = _weatherRepository.getWeather();
     });
   }
 
@@ -29,7 +43,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     weatherData = WeatherRepository().getWeather();
-    cityData = CityRepository().getCity('Gerderath');
   }
 
   @override
@@ -45,7 +58,83 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const ShowCityWidget(),
+            SizedBox(
+              height: 80,
+              width: 400,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "City/Location:",
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(width: 5),
+                      if (cityController.text.isNotEmpty)
+                        Text(cityController.text,
+                            style: const TextStyle(
+                                color: Color.fromARGB(255, 1, 151, 171),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold))
+                      else
+                        const Text(
+                          "Wähle eine Stadt",
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 1, 151, 171),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                        ),
+                    ],
+                  ),
+                  OutlinedButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text("Welche Stadt soll es sein?",
+                              style: TextStyle(fontSize: 19)),
+                          content: TextField(
+                            onTapOutside: (PointerDownEvent event) {
+                              FocusScope.of(context).unfocus();
+                            },
+                            controller: cityController,
+                            decoration: const InputDecoration(
+                                hintText: "Stadt eingeben"),
+                          ),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  final city = _cityRepository
+                                      .getCity(cityController.text);
+                                  setState(() {
+                                    Navigator.of(context).pop(city);
+                                  });
+                                },
+                                child: const Text("Add")),
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text("Close")),
+                          ],
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      "Stadt Auswählen",
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Color.fromARGB(255, 1, 151, 171),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             FutureBuilder<Weather>(
               future: weatherData,
               builder: (context, snapshot) {
