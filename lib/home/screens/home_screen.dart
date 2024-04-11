@@ -1,9 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wilmawetter/home/models/city.dart';
 import 'package:wilmawetter/home/models/weather.dart';
+import 'package:wilmawetter/home/repositories/city_repository.dart';
 import 'package:wilmawetter/home/repositories/weather_repository.dart';
-import 'package:wilmawetter/home/widgets/citysearch_widget.dart';
+import 'package:wilmawetter/home/widgets/citysearchdialog_widget.dart';
+import 'package:wilmawetter/home/widgets/showcity_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -16,6 +17,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<Weather> weatherData;
+  late Future<City> cityData;
 
   void refreshWeather() {
     setState(() {
@@ -27,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     weatherData = WeatherRepository().getWeather();
+    cityData = CityRepository().getCity('Gerderath');
   }
 
   @override
@@ -42,26 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              "City/Location: Stuttgart",
-              style: TextStyle(
-                  fontSize: 18,
-                  color: Color.fromARGB(255, 1, 151, 171),
-                  fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-            OutlinedButton(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) => const CitySearchDialog());
-                },
-                child: const Text("Stadt Auswählen",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Color.fromARGB(255, 1, 151, 171),
-                    ))),
-            const SizedBox(height: 20),
+            const ShowCityWidget(),
             FutureBuilder<Weather>(
               future: weatherData,
               builder: (context, snapshot) {
