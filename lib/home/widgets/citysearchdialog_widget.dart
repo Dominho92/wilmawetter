@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:wilmawetter/home/repositories/city_repository.dart';
 
 class CitySearchDialog extends StatefulWidget {
   const CitySearchDialog({super.key});
@@ -10,6 +11,14 @@ class CitySearchDialog extends StatefulWidget {
 
 class _CitySearchDialogState extends State<CitySearchDialog> {
   TextEditingController cityController = TextEditingController();
+
+  final CityRepository _cityRepository = CityRepository();
+
+  @override
+  void dispose() {
+    cityController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +34,11 @@ class _CitySearchDialogState extends State<CitySearchDialog> {
       ),
       actions: [
         TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
+            onPressed: () async {
+              final response =
+                  await _cityRepository.getCity(cityController.text);
+              if (!context.mounted) return;
+              Navigator.of(context).pop(response);
             },
             child: const Text("Add")),
         TextButton(

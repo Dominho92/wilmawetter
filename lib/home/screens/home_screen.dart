@@ -3,6 +3,7 @@ import 'package:wilmawetter/home/models/city.dart';
 import 'package:wilmawetter/home/models/weather.dart';
 import 'package:wilmawetter/home/repositories/city_repository.dart';
 import 'package:wilmawetter/home/repositories/weather_repository.dart';
+import 'package:wilmawetter/home/widgets/citysearchdialog_widget.dart';
 import 'package:wilmawetter/home/widgets/showcity_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,34 +16,26 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late Future<Weather> weatherData;
-  late Future<City> cityData;
-
-  TextEditingController cityController = TextEditingController();
-
-  List<String> selectedCities = [];
+  Future<Weather>? weatherData;
 
   final WeatherRepository _weatherRepository = WeatherRepository();
-  final CityRepository _cityRepository = CityRepository();
 
   City? city;
 
-  @override
-  void dispose() {
-    cityController.dispose();
-    super.dispose();
-  }
-
   void refreshWeather() {
     setState(() {
-      weatherData = _weatherRepository.getWeather();
+      if (city != null) {
+        weatherData = _weatherRepository.getWeather(city!);
+      }
     });
   }
 
   @override
   void initState() {
     super.initState();
-    weatherData = WeatherRepository().getWeather();
+    if (city != null) {
+      weatherData = _weatherRepository.getWeather(city!);
+    }
   }
 
   @override
@@ -74,8 +67,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(width: 5),
-                      if (cityController.text.isNotEmpty)
-                        Text(cityController.text,
+                      if (city != null)
+                        Text(city!.cityName,
                             style: const TextStyle(
                                 color: Color.fromARGB(255, 1, 151, 171),
                                 fontSize: 16,
@@ -91,38 +84,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   OutlinedButton(
-                    onPressed: () {
-                      showDialog(
+                    onPressed: () async {
+                      city = await showDialog<City?>(
                         context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text("Welche Stadt soll es sein?",
-                              style: TextStyle(fontSize: 19)),
-                          content: TextField(
-                            onTapOutside: (PointerDownEvent event) {
-                              FocusScope.of(context).unfocus();
-                            },
-                            controller: cityController,
-                            decoration: const InputDecoration(
-                                hintText: "Stadt eingeben"),
-                          ),
-                          actions: [
-                            TextButton(
-                                onPressed: () {
-                                  final city = _cityRepository
-                                      .getCity(cityController.text);
-                                  setState(() {
-                                    Navigator.of(context).pop(city);
-                                  });
-                                },
-                                child: const Text("Add")),
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text("Close")),
-                          ],
-                        ),
+                        builder: (context) => const CitySearchDialog(),
                       );
+                      if (city != null) {
+                        setState(() {
+                          weatherData = _weatherRepository.getWeather(city!);
+                        });
+                      }
                     },
                     child: const Text(
                       "Stadt Auswählen",
@@ -135,73 +106,74 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            FutureBuilder<Weather>(
-              future: weatherData,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasData) {
-                  return Column(
-                    children: [
-                      Text(
-                        'Temperature: ${snapshot.data!.temperature}°C',
-                        style: const TextStyle(
-                            fontSize: 15,
-                            color: Color.fromARGB(255, 42, 42, 42),
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "Apparent: ${snapshot.data!.apparentTemperature}°C",
-                        style: const TextStyle(
-                            fontSize: 15,
-                            color: Color.fromARGB(255, 42, 42, 42),
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        'Precipitation: ${snapshot.data!.precipitation} mm',
-                        style: const TextStyle(
-                            fontSize: 15,
-                            color: Color.fromARGB(255, 42, 42, 42),
-                            fontWeight: FontWeight.bold),
-                      ),
-                      if (snapshot.data!.isDay == 1)
-                        const Text(
-                          'DayTime: Day',
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: Color.fromARGB(255, 42, 42, 42),
-                              fontWeight: FontWeight.bold),
-                        )
-                      else
-                        const Text(
-                          'DayTime: Night',
-                          style: TextStyle(
+            if (weatherData != null)
+              FutureBuilder<Weather>(
+                future: weatherData,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasData) {
+                    return Column(
+                      children: [
+                        Text(
+                          'Temperature: ${snapshot.data!.temperature}°C',
+                          style: const TextStyle(
                               fontSize: 15,
                               color: Color.fromARGB(255, 42, 42, 42),
                               fontWeight: FontWeight.bold),
                         ),
-                      Text(
-                        'Latitude: ${snapshot.data!.latitude}',
-                        style: const TextStyle(
-                            fontSize: 15,
-                            color: Color.fromARGB(255, 42, 42, 42),
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        'Longitude: ${snapshot.data!.longitude}',
-                        style: const TextStyle(
-                            fontSize: 15,
-                            color: Color.fromARGB(255, 42, 42, 42),
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('${snapshot.error}');
-                }
-                return const CircularProgressIndicator();
-              },
-            ),
+                        Text(
+                          "Apparent: ${snapshot.data!.apparentTemperature}°C",
+                          style: const TextStyle(
+                              fontSize: 15,
+                              color: Color.fromARGB(255, 42, 42, 42),
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'Precipitation: ${snapshot.data!.precipitation} mm',
+                          style: const TextStyle(
+                              fontSize: 15,
+                              color: Color.fromARGB(255, 42, 42, 42),
+                              fontWeight: FontWeight.bold),
+                        ),
+                        if (snapshot.data!.isDay == 1)
+                          const Text(
+                            'DayTime: Day',
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: Color.fromARGB(255, 42, 42, 42),
+                                fontWeight: FontWeight.bold),
+                          )
+                        else
+                          const Text(
+                            'DayTime: Night',
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: Color.fromARGB(255, 42, 42, 42),
+                                fontWeight: FontWeight.bold),
+                          ),
+                        Text(
+                          'Latitude: ${snapshot.data!.latitude}',
+                          style: const TextStyle(
+                              fontSize: 15,
+                              color: Color.fromARGB(255, 42, 42, 42),
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'Longitude: ${snapshot.data!.longitude}',
+                          style: const TextStyle(
+                              fontSize: 15,
+                              color: Color.fromARGB(255, 42, 42, 42),
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+                  return const CircularProgressIndicator();
+                },
+              ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
