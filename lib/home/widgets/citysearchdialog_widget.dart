@@ -33,6 +33,11 @@ class _CitySearchDialogState extends State<CitySearchDialog> {
       ),
       actions: [
         TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text("Schließen")),
+        TextButton(
             onPressed: () async {
               final response =
                   await _cityRepository.getCity(cityController.text);
@@ -40,11 +45,6 @@ class _CitySearchDialogState extends State<CitySearchDialog> {
               Navigator.of(context).pop(response);
             },
             child: const Text("Hinzufügen")),
-        TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text("Schließen")),
       ],
     );
   }
