@@ -39,12 +39,12 @@ class _CitySearchDialogState extends State<CitySearchDialog> {
               if (!context.mounted) return;
               Navigator.of(context).pop(response);
             },
-            child: const Text("Add")),
+            child: const Text("Hinzufügen")),
         TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text("Close")),
+            child: const Text("Schließen")),
       ],
     );
   }

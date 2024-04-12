@@ -20,6 +20,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   City? city;
 
+  void clearWeather() {
+    setState(() {
+      city = null;
+      weatherData = null;
+    });
+  }
+
   void refreshWeather() {
     setState(() {
       if (city != null) {
@@ -89,7 +96,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                       if (city != null) {
                         setState(() {
-                          weatherData = _weatherRepository.getWeather(city!);
+                          Text("City/Location: ${city!.cityName}",
+                              style: const TextStyle(
+                                  color: Color.fromARGB(255, 1, 151, 171),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold));
                         });
                       }
                     },
@@ -181,6 +192,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   backgroundColor: MaterialStateProperty.all<Color>(
                       const Color.fromARGB(255, 1, 151, 171))),
               child: const Text("Refresh it Wilma!",
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Color.fromARGB(255, 255, 255, 255),
+                  )),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                clearWeather();
+              },
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      Color.fromARGB(255, 171, 1, 12))),
+              child: const Text("Wilma I'm done!",
                   style: TextStyle(
                     fontSize: 15,
                     color: Color.fromARGB(255, 255, 255, 255),

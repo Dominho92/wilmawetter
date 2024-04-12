@@ -5,9 +5,7 @@ import 'package:wilmawetter/home/models/city.dart';
 class CityRepository {
   static const _apiKey = 'rYkezFAMBbcNtarWsjzSIQ==ERbAaz9XBucuDcNt';
 
-  Future<City> getCity(
-    String city,
-  ) async {
+  Future<City> getCity(String city) async {
     final url = 'https://api.api-ninjas.com/v1/geocoding?city=$city';
     final response =
         await http.get(Uri.parse(url), headers: {'X-Api-Key': _apiKey});
