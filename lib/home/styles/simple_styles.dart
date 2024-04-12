@@ -6,3 +6,8 @@ const myCustomBG = BoxDecoration(
     fit: BoxFit.cover,
   ),
 );
+
+const cityTextStyle = TextStyle(
+    color: Color.fromARGB(255, 1, 151, 171),
+    fontSize: 16,
+    fontWeight: FontWeight.bold);

@@ -79,18 +79,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           const SizedBox(width: 5),
                           if (city != null)
-                            Text(city!.cityName,
-                                style: const TextStyle(
-                                    color: Color.fromARGB(255, 1, 151, 171),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold))
+                            Text(city!.cityName, style: cityTextStyle)
                           else
                             const Text(
                               "Wähle eine Stadt",
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 1, 151, 171),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
+                              style: cityTextStyle,
                             ),
                         ],
                       ),
@@ -103,10 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           if (city != null) {
                             setState(() {
                               Text("City/Location: ${city!.cityName}",
-                                  style: const TextStyle(
-                                      color: Color.fromARGB(255, 1, 151, 171),
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold));
+                                  style: cityTextStyle);
                             });
                           }
                         },
