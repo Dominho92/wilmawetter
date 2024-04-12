@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wilmawetter/home/models/city.dart';
 import 'package:wilmawetter/home/models/weather.dart';
 import 'package:wilmawetter/home/repositories/weather_repository.dart';
+import 'package:wilmawetter/home/styles/simple_styles.dart';
 import 'package:wilmawetter/home/widgets/citysearchdialog_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -54,12 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       backgroundColor: const Color.fromARGB(255, 213, 213, 213),
       body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/bg.png"),
-            fit: BoxFit.cover,
-          ),
-        ),
+        decoration: myCustomBG,
         child: Padding(
           padding: const EdgeInsets.only(bottom: 5.0),
           child: Center(
