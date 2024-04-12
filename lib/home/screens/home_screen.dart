@@ -204,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
-                      Color.fromARGB(255, 171, 1, 12))),
+                      const Color.fromARGB(255, 171, 1, 12))),
               child: const Text("Wilma I'm done!",
                   style: TextStyle(
                     fontSize: 15,
