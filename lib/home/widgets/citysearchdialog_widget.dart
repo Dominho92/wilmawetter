@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:wilmawetter/home/repositories/city_repository.dart';
 
 class CitySearchDialog extends StatefulWidget {

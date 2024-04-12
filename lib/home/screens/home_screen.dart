@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wilmawetter/home/models/city.dart';
 import 'package:wilmawetter/home/models/weather.dart';
-import 'package:wilmawetter/home/repositories/city_repository.dart';
 import 'package:wilmawetter/home/repositories/weather_repository.dart';
 import 'package:wilmawetter/home/widgets/citysearchdialog_widget.dart';
-import 'package:wilmawetter/home/widgets/showcity_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
