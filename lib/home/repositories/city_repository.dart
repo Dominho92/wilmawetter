@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wilmawetter/home/models/city.dart';
 
 class CityRepository {
@@ -16,5 +17,24 @@ class CityRepository {
     } else {
       throw Exception('Failed to load weather');
     }
+  }
+
+  Future<City?> getSavedCity() async {
+    final prefs = await SharedPreferences.getInstance();
+    final cityString = prefs.getString('city');
+    if (cityString == null) return null;
+    final jsonMap = jsonDecode(cityString);
+    final cityObject = City.fromJson(jsonMap);
+    return cityObject;
+  }
+
+  Future<void> saveCity(City city) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('city', jsonEncode(city.toJson()));
+  }
+
+  Future<void> deleteCity() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('city');
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wilmawetter/home/models/city.dart';
 import 'package:wilmawetter/home/models/weather.dart';
+import 'package:wilmawetter/home/repositories/city_repository.dart';
 import 'package:wilmawetter/home/repositories/weather_repository.dart';
 import 'package:wilmawetter/home/styles/simple_styles.dart';
 import 'package:wilmawetter/home/widgets/citysearchdialog_widget.dart';
@@ -23,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void clearWeather() {
     setState(() {
+      CityRepository().deleteCity();
       city = null;
       weatherData = null;
     });
@@ -36,12 +38,19 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void _loadSavedCity() async {
+    final cityFromRepo = await CityRepository().getSavedCity();
+    if (cityFromRepo != null) {
+      setState(() {
+        city = cityFromRepo;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    if (city != null) {
-      weatherData = _weatherRepository.getWeather(city!);
-    }
+    _loadSavedCity();
   }
 
   @override

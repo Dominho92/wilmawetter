@@ -39,8 +39,10 @@ class _CitySearchDialogState extends State<CitySearchDialog> {
             child: const Text("Schließen")),
         TextButton(
             onPressed: () async {
+              final repository = CityRepository();
               final response =
                   await _cityRepository.getCity(cityController.text);
+              repository.saveCity(response);
               if (!context.mounted) return;
               Navigator.of(context).pop(response);
             },

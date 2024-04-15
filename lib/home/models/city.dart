@@ -16,4 +16,11 @@ class City {
       longitude: json["longitude"],
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      "name": cityName,
+      "latitude": latitude,
+      "longitude": longitude,
+    };
+  }
 }
