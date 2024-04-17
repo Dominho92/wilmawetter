@@ -25,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void clearWeather() {
     setState(() {
       CityRepository().deleteCity();
+      _weatherRepository.deleteWeather();
       city = null;
       weatherData = null;
     });
@@ -47,10 +48,20 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  void loadSavedWeather() async {
+    final weatherFromRepo = await _weatherRepository.getSavedWeather();
+    if (weatherFromRepo != null) {
+      setState(() {
+        weatherData = Future.value(weatherFromRepo);
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _loadSavedCity();
+    loadSavedWeather();
   }
 
   @override
@@ -190,8 +201,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     refreshWeather();
+                    final repository = WeatherRepository();
+                    final response = await _weatherRepository.getWeather(city!);
+                    repository.saveWeather(response);
+                    if (!context.mounted) return;
                   },
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(

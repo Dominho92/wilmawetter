@@ -24,4 +24,16 @@ class Weather {
       isDay: json['current']['is_day'],
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'current': {
+        'apparent_temperature': apparentTemperature,
+        'temperature_2m': temperature,
+        'precipitation': precipitation,
+        'is_day': isDay
+      },
+      'latitude': latitude,
+      'longitude': longitude,
+    };
+  }
 }
